@@ -1,0 +1,9 @@
+-Dspring.profiles.active=prod
+
+CREATE TABLE `app_user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(45) DEFAULT NULL,
+  `AGE` int(11) DEFAULT NULL,
+  `SALARY` double DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
