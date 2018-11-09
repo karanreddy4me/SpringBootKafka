@@ -7,3 +7,5 @@ CREATE TABLE `app_user` (
   `SALARY` double DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+https://github.com/oktadeveloper/okta-spring-boot-saml-example
