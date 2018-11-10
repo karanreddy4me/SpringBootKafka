@@ -1,12 +1,22 @@
 package com.springboot.model;
 
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
-import java.io.Serializable;
-
 @Entity
-@Table(name="APP_USER")
+@Table(name="USER")
 public class User implements Serializable{
 
 	@Id
@@ -17,12 +27,15 @@ public class User implements Serializable{
 	@Column(name="NAME", nullable=false)
 	private String name;
 
-	@Column(name="AGE", nullable=false)
-	private Integer age;
+	@Column(name="TIMESTAMP", nullable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	private Date timeStamp;
+	
+	@Column(name="COUNT", nullable=false)
+	private Integer count;
 
-	@Column(name="SALARY", nullable=false)
-	private double salary;
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -39,20 +52,22 @@ public class User implements Serializable{
 		this.name = name;
 	}
 
-	public Integer getAge() {
-		return age;
+	
+
+	public Date getTimeStamp() {
+		return timeStamp;
 	}
 
-	public void setAge(Integer age) {
-		this.age = age;
+	public void setTimeStamp(Date timeStamp) {
+		this.timeStamp = timeStamp;
 	}
 
-	public double getSalary() {
-		return salary;
+	public Integer getCount() {
+		return count;
 	}
 
-	public void setSalary(double salary) {
-		this.salary = salary;
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
 	@Override
@@ -62,34 +77,29 @@ public class User implements Serializable{
 
 		User user = (User) o;
 
-		if (Double.compare(user.salary, salary) != 0) return false;
 		if (id != null ? !id.equals(user.id) : user.id != null) return false;
 		if (name != null ? !name.equals(user.name) : user.name != null) return false;
-		return age != null ? age.equals(user.age) : user.age == null;
+		return count != null ? count.equals(user.count) : user.count == null;
 	}
 
 	@Override
 	public int hashCode() {
 		int result;
-		long temp;
 		result = id != null ? id.hashCode() : 0;
 		result = 31 * result + (name != null ? name.hashCode() : 0);
-		result = 31 * result + (age != null ? age.hashCode() : 0);
-		temp = Double.doubleToLongBits(salary);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (count != null ? count.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", age=" + age
-				+ ", salary=" + salary + "]";
+		return "User [name=" + name + ", count=" + count + "]";
 	}
-
-	public User(String name, Integer age, double salary) {
+	public User() {
+	}
+	public User(String name, Integer count) {
 		this.name = name;
-		this.age = age;
-		this.salary = salary;
+		this.count = count;
 	}
 
 

@@ -29,11 +29,12 @@ public class RestApiController {
 	@Autowired
 	private KafkaTemplate<String, User> kafkaTemplate;
 
-	private static final String TOPIC = "Kafka_Example";
+//	private static final String TOPIC = "Kafka_Example";
+	private static final String TOPIC = "Kafka_Example_json";
 	@RequestMapping("/click/{name}")
 	public String welcome(@PathVariable("name") final String name) {//Welcome page, non-rest
 		logger.info("rest endpoint /click");
-		kafkaTemplate.send(TOPIC, new User(name, 12, 12000.00));
+		kafkaTemplate.send(TOPIC, new User(name, new Integer(1)));
 
 		return "Published successfully";
 		//return "Welcome to Rest Example.";
