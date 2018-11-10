@@ -15,7 +15,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import com.springboot.model.User;
 
 @Configuration
-public class KakfaConfiguration {
+public class KakfaProducerConfiguration {
 
     @Bean
     public ProducerFactory<String, User> producerFactory() {
