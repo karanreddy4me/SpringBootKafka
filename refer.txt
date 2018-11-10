@@ -9,3 +9,34 @@ CREATE TABLE `app_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 https://github.com/oktadeveloper/okta-spring-boot-saml-example
+
+
+# Spring Boot with Kafka Producer Example
+
+This Project covers how to use Spring Boot with Spring Kafka to Publish JSON/String message to a Kafka topic
+## Start Zookeeper
+- `bin/zookeeper-server-start.bat config/zookeeper.properties`
+
+## Start Kafka Server
+- `bin/kafka-server-start.bat config/server.properties`
+
+## Create Kafka Topic
+- `bin/kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic Kafka_Example`
+
+## Consume from the Kafka Topic via Console
+- `bin/kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic Kafka_Example --from-beginning`
+
+## Publish message via WebService
+- `http://localhost:8081/kafka/publish/Sam`
+- `http://localhost:8081/kafka/publish/Peter`
+
+
+kafka-acls.bat ..\..\config\server.properties
+
+zookeeper-server-start.bat ..\..\config\zookeeper.properties
+kafka-server-start.bat  ..\..\config\server.properties
+
+D:\Softwares\kafka_2.10-0.10.1.0\bin\windows
+
+--create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic Kafka_Example
+--bootstrap-server localhost:9092 --topic Kafka_Example --from-beginning

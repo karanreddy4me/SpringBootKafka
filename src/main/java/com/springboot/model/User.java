@@ -86,5 +86,11 @@ public class User implements Serializable{
 				+ ", salary=" + salary + "]";
 	}
 
+	public User(String name, Integer age, double salary) {
+		this.name = name;
+		this.age = age;
+		this.salary = salary;
+	}
+
 
 }

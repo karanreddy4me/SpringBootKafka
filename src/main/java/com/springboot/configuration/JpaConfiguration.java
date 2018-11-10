@@ -9,14 +9,15 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -24,14 +25,24 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.zaxxer.hikari.HikariDataSource;
-
 @Configuration
 @EnableJpaRepositories(basePackages = "com.websystique.springboot.repositories",
-		entityManagerFactoryRef = "entityManagerFactory",
-		transactionManagerRef = "transactionManager")
+entityManagerFactoryRef = "entityManagerFactory",
+transactionManagerRef = "transactionManager")
 @EnableTransactionManagement
+@PropertySource("classpath:application.properties")
 public class JpaConfiguration {
+
+	private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
+	private static final String PROPERTY_NAME_DATABASE_PASSWORD = "db.password";
+	private static final String PROPERTY_NAME_DATABASE_URL = "db.url";
+	private static final String PROPERTY_NAME_DATABASE_USERNAME = "db.username";
+
+	private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
+	private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
+	private static final String PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
+	private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
+
 
 	@Autowired
 	private Environment environment;
@@ -46,7 +57,7 @@ public class JpaConfiguration {
 	 */
 	@Bean
 	@Primary
-	@ConfigurationProperties(prefix = "datasource.sampleapp")
+	//@ConfigurationProperties(prefix = "datasource.sampleapp")
 	public DataSourceProperties dataSourceProperties(){
 		return new DataSourceProperties();
 	}
@@ -56,17 +67,14 @@ public class JpaConfiguration {
 	 */
 	@Bean
 	public DataSource dataSource() {
-		DataSourceProperties dataSourceProperties = dataSourceProperties();
-			HikariDataSource dataSource = (HikariDataSource) DataSourceBuilder
-					.create(dataSourceProperties.getClassLoader())
-					.driverClassName(dataSourceProperties.getDriverClassName())
-					.url(dataSourceProperties.getUrl())
-					.username(dataSourceProperties.getUsername())
-					.password(dataSourceProperties.getPassword())
-					.type(HikariDataSource.class)
-					.build();
-			dataSource.setMaximumPoolSize(maxPoolSize);
-			return dataSource;
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		
+		dataSource.setDriverClassName(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
+		dataSource.setUrl(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_URL));
+		dataSource.setUsername(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_USERNAME));
+		dataSource.setPassword(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_PASSWORD));
+		
+		return dataSource;
 	}
 
 	/*
@@ -96,21 +104,21 @@ public class JpaConfiguration {
 	 */
 	private Properties jpaProperties() {
 		Properties properties = new Properties();
-		properties.put("hibernate.dialect", environment.getRequiredProperty("datasource.sampleapp.jpa.dialect"));
-		properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("datasource.sampleapp.jpa.hbm2ddl.method"));
+		properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
+		properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
 		properties.put("hibernate.show_sql", environment.getRequiredProperty("datasource.sampleapp.jpa.show_sql"));
-		properties.put("hibernate.format_sql", environment.getRequiredProperty("datasource.sampleapp.jpa.format_sql"));
-		if(StringUtils.isNotEmpty(environment.getRequiredProperty("datasource.sampleapp.defaultSchema"))){
-			properties.put("hibernate.default_schema", environment.getRequiredProperty("datasource.sampleapp.defaultSchema"));
-		}
+		properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+//		if(StringUtils.isNotEmpty(environment.getRequiredProperty("datasource.sampleapp.defaultSchema"))){
+//			properties.put("hibernate.default_schema", environment.getRequiredProperty("datasource.sampleapp.defaultSchema"));
+//		}
 		return properties;
-		
-		
-//		Properties properties = new Properties();
-//        properties.setProperty("hibernate.ddl-auto", this.environment.getProperty("spring.jpa.hibernate.ddl-auto"));
-//        properties.setProperty("hibernate.dialect", this.environment.getProperty("spring.jpa.hibernate.dialect"));
-//        properties.setProperty("hibernate.show_sql", this.environment.getProperty("spring.jpa.show-sql"));
-//        return properties;
+
+
+		//		Properties properties = new Properties();
+		//        properties.setProperty("hibernate.ddl-auto", this.environment.getProperty("spring.jpa.hibernate.ddl-auto"));
+		//        properties.setProperty("hibernate.dialect", this.environment.getProperty("spring.jpa.hibernate.dialect"));
+		//        properties.setProperty("hibernate.show_sql", this.environment.getProperty("spring.jpa.show-sql"));
+		//        return properties;
 	}
 
 	@Bean
