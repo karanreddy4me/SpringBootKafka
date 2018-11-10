@@ -10,3 +10,6 @@ kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --pa
 
 step 4:consumer
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic Kafka_Example --from-beginning
+
+rest url
+http://localhost:8081/SpringBootKafka/api/click/karanreddy1
