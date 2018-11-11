@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.springboot.model.User;
+import com.springboot.service.UserService;
 import com.springboot.util.CustomErrorType;
 
 
@@ -26,6 +27,9 @@ import com.springboot.util.CustomErrorType;
 public class RestApiController {
 	public static final Logger logger = LoggerFactory.getLogger(RestApiController.class);
 
+	@Autowired
+	UserService userService;
+	
 	@Autowired
 	private KafkaTemplate<String, User> kafkaTemplate;
 
@@ -39,4 +43,17 @@ public class RestApiController {
 		return "Published successfully";
 		//return "Welcome to Rest Example.";
 	}
+	
+	// -------------------Retrieve All Users---------------------------------------------
+
+	@RequestMapping(value = "/user/", method = RequestMethod.GET)
+	public ResponseEntity<List<User>> listAllUsers() {
+		List<User> users = userService.findAllUsers();
+		if (users.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			// You many decide to return HttpStatus.NOT_FOUND
+		}
+		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+	}
+	
 }
