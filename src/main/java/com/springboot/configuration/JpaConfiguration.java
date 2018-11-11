@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
@@ -24,8 +25,13 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.view.JstlView;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 @Configuration
+@ComponentScan("com.springboot")
+//@EnableWebMvc
 @EnableJpaRepositories(basePackages = "com.springboot",
 entityManagerFactoryRef = "entityManagerFactory",
 transactionManagerRef = "transactionManager")
@@ -128,5 +134,12 @@ public class JpaConfiguration {
 		txManager.setEntityManagerFactory(emf);
 		return txManager;
 	}
-
+//	@Bean
+//	public UrlBasedViewResolver setupViewResolver() {
+//		UrlBasedViewResolver resolver = new UrlBasedViewResolver();
+//		resolver.setPrefix("/static/");
+//		resolver.setSuffix(".html");
+//		resolver.setViewClass(JstlView.class);
+//		return resolver;
+//	}
 }
