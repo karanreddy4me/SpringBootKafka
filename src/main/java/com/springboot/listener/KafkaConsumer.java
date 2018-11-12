@@ -1,5 +1,7 @@
 package com.springboot.listener;
 
+import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class KafkaConsumer {
 			containerFactory = "userKafkaListenerFactory")
 	public void consumeJson(User user) {
 		System.out.println("Consumed JSON Message: " + user);
+		LocalDateTime rightNow = LocalDateTime.now();
+		user.setTimeStamp(rightNow);
 		userService.saveUser(user);
 
 	}
